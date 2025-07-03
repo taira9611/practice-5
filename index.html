@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>購物頁面</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        /* body {
+            height: 5000px;
+        } */
+
+        .navbar-large .navbar-brand,
+        .navbar-large .nav-link,
+        .navbar-large .dropdown-item {
+            padding-top: 1.5rem !important;
+            /* 增加垂直內邊距 */
+            padding-bottom: 1.5rem !important;
+            /* 增加垂直內邊距 */
+            font-size: 2.1rem;
+            /* 增加字體大小 */
+            font-weight: bold;
+            ;
+        }
+
+        .navbar-large .navbar-brand img {
+            height: 100px;
+            /* 調整 Logo 大小 */
+        }
+
+        .navbar-large .nav-link {
+            /* ... 其他樣式 ... */
+            font-size: 2.1rem;
+            /* 這是導航連結的字體大小 */
+            /* ... 其他樣式 ... */
+
+        }
+
+        .navbar-large .nav-item .btn {
+            /* 調整按鈕的垂直對齊，使其與文字連結對齊 */
+            padding-top: 1.5rem !important;
+            /* 確保與 nav-link 的上邊距一致 */
+            padding-bottom: 1.5rem !important;
+            /* 確保與 nav-link 的下邊距一致 */
+            margin-top: 0 !important;
+            /* 移除可能的上邊距 */
+            margin-bottom: 0 !important;
+            /* 移除可能的下邊距 */
+            display: flex;
+            /* 使用 flexbox 讓內容垂直居中 */
+            align-items: center;
+            /* 垂直居中對齊 */
+            height: 100%;
+            /* 讓按鈕高度填滿 nav-item */
+        }
+
+        .navbar-large .nav-item .btn .bi-cart {
+            /* 由於按鈕已經設定了 padding，這裡只需要確保圖示本身正確顯示 */
+            line-height: 1;
+            /* 重置行高，避免額外空間 */
+        }
+
+        .cart-badge {
+            position: static;
+            /* 或不設定，讓它跟隨 flow */
+            margin-left: 5px;
+            /* 在圖示和數字之間添加一些間距 */
+            top: -5px;
+            /* Adjust to move slightly above the icon */
+            right: -5px;
+            /* Adjust to move slightly to the right of the icon */
+            font-size: 0.7em;
+            /* Smaller font for a compact look */
+            padding: .2em .5em;
+            /* Smaller padding to make it a tighter circle */
+            border-radius: 50%;
+            /* Ensure it's a perfect circle */
+            background-color: red;
+            color: white;
+            z-index: 1000;
+            min-width: 1.5em;
+            /* Ensure minimum width for single digit */
+            text-align: center;
+            /* Center the number */
+            line-height: 1.5em;
+            /* Center vertically */
+        }
+
+        
+        
+
+        .my-circle {
+            background-color: lightgray;
+            width: 140px;
+            height: 140px;
+        }
+
+        .mt-6 {
+            margin-top: 200px;
+        }
+
+        .image-frame {
+            height: 250px;
+            /* 設定圖片容器的固定高度 */
+            overflow: hidden;
+            /* 隱藏超出容器範圍的圖片部分 */
+        }
+
+        .image-frame img {
+            width: 100%;
+            /* 讓圖片填滿容器的寬度 */
+            height: 100%;
+            /* 讓圖片填滿容器的高度 */
+            object-fit: cover;
+            /* 裁切圖片以適應容器，同時保持長寬比 */
+            display: block;
+            /* 移除圖片下方可能存在的額外空間 */
+        }
+
+        .four-box-container .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            /* 垂直方向上平均分佈內容 */
+            min-height: 150px;
+            /* 設定 card-body 的最小高度，以確保價格和按鈕對齊 */
+        }
+
+        .four-box-container .card-body .card-title {
+            /* price */
+            min-height: 24px;
+            /* 根據內容調整此值，確保價格行高 */
+            text-align: left;
+            /* 價格文字靠左對齊 */
+            margin-top: auto;
+            /* 將價格推到底部，確保與按鈕相對位置一致 */
+            margin-bottom: 10px;
+            /* 價格與按鈕之間的間距 */
+        }
+
+        .four-box-container .card-body .card-text {
+            /* category (如果 fourBoxCards 有類別) */
+            min-height: 30px;
+            /* 根據內容調整此值，確保類別行高 */
+            text-align: left;
+            /* 類別文字靠左對齊 */
+        }
+
+        .eight-cards-container .card-body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .eight-cards-container .card-body .card-text:nth-of-type(1) {
+            /* category */
+            min-height: 50px;
+            /* 根據內容調整此值 */
+        }
+
+        .eight-cards-container .card-body .card-title {
+            /* price */
+            min-height: 24px;
+            /* 根據內容調整此值 */
+        }
+
+        .eight-cards-container .card-body .card-text:nth-of-type(2) {
+            /* buttonText */
+            min-height: 24px;
+            /* 根據內容調整此值 */
+        }
+
+        .eight-cards-container .card-body button.btn {
+            width: 100%;
+        }
+
+        .four-box-container .card-body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .four-box-container .card-body .card-title {
+            min-height: 48px;
+            /* 根據內容調整此值 */
+        }
+
+        .four-box-container .card-body .card-text {
+            min-height: 30px;
+            /* 根據內容調整此值 */
+        }
+
+        .four-box-container .card-body .btn {
+            margin-top: auto;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="app">
+        <!-- ========nav======== -->
+        <nav class="navbar navbar-expand-lg bg-light navbar-large">
+            <div class="container">
+                <a class="navbar-brand" href="./index.html">
+                    <img src="./img/logo1.avif" alt="Bootstrap">
+                    <!-- Navbar -->
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item ">
+                            <a class="nav-link active" aria-current="page" href="./index.html">首頁</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">最新消息</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">銷售據點</a>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn" data-bs-toggle="modal" data-bs-target="#checkoutModal">
+                                <a href="./結帳頁面-1.html"
+                                    class="bi bi-cart text-decoration-none text-reset position-relative"
+                                    style="font-size: 2.1rem;">
+                                    <span class="cart-badge" v-show="cartCount > 0">{{ cartCount }}</span>
+                                </a>
+                            </button>
+                        </li>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <i class="bi bi-person-circle"></i>
+                            </a>
+                            <ul class="dropdown-menu" style="left:-130px">
+                                <li><a class="dropdown-item" :href="isLoggedIn ? '#' : './登入頁面.html'" @click="isLoggedIn ? logout() : null">{{ isLoggedIn ? '登出' : '會員登入' }}</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid bg-danger text-white text-center py-5 fs-1">
+            注意!本網站為學習練習用，非美津濃官網
+        </div>
+        <!-- ========nav======== -->
+        <!-- ========big-picture======== -->
+        <div id="carouselExampleCaptions" class="carousel slide mb-5 pb-5" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+                    aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+                    aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
+                    aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3"
+                    aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="./img/img-1.avif" class="d-block w-100" alt="..." style="max-height: 800px;">
+                    <div class="carousel-caption d-none d-md-block"></div>
+                </div>
+                <div class="carousel-item">
+                    <img src="./img/img-2.avif" class="d-block w-100" alt="..." style="max-height: 800px;">
+                    <div class="carousel-caption d-none d-md-block text-start"></div>
+                </div>
+                <div class="carousel-item">
+                    <img src="./img/img-3.avif" class="d-block w-100" alt="..." style="max-height: 800px;">
+                    <div class="carousel-caption d-none d-md-block text-center"></div>
+                </div>
+                <div class="carousel-item ">
+                    <img src="./img/img-4.avif" class="d-block w-100" alt="..." style="max-height: 800px;">
+                    <div class="carousel-caption d-none d-md-block text-end"></div>
+                </div>
+            </div>
+        </div>
+        <!-- ========big-picture======== -->
+
+        <div class="container">
+            <!-- ========three-box======== -->
+            <div class="row mb-5 pb-5">
+                <div v-for="(item, index) in threeBoxItems" :key="index" class="col-lg-4 text-center">
+                    <img :src="item.image" class="my-circle rounded-circle mx-auto mb-2" :alt="item.alt">
+                    <p class="h2">{{ item.title }}</p>
+                    <p class="lead">{{ item.price }}</p>
+                    <button type="button" class="btn btn-primary" @click="addToCart(item)"
+                        :disabled="item.addedToCart">{{ item.buttonText }}</button>
+                </div>
+            </div>
+            <!-- ========three-box======== -->
+            <!-- ========six-picture======== -->
+            <div class="container text-center mt-5 mb-5">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-6 p-1 image-frame">
+                                <img class="w-100" :src="sixPictureItems[0]" alt="">
+                            </div>
+                            <div class="col-6 p-1 image-frame">
+                                <img class="w-100" :src="sixPictureItems[1]" alt="">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 p-1 image-frame">
+                                <img class="w-100" :src="sixPictureItems[2]" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-12 p-1 image-frame">
+                                <img class="w-100" :src="sixPictureItems[3]" alt="">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 p-1 image-frame">
+                                <img class="w-100" :src="sixPictureItems[4]" alt="">
+                            </div>
+                            <div class="col-6 p-1 image-frame">
+                                <img class="w-100" :src="sixPictureItems[5]" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ========six-picture======== -->
+            <!-- ========text-3======== -->
+            <div class="row mt-5 mb-5 d-flex justify-content-center">
+                <div class="col-md-7 order-md-2 d-flex flex-column justify-content-center text-center">
+                    <p class="h1">
+                        {{ memberSection.title }}
+                    </p>
+                    <p class="fs-52 mt-3">
+                        {{ memberSection.subtitle }}
+                    </p>
+                </div>
+            </div>
+            <!-- ========text-3======== -->
+            <!-- ========table======== -->
+            <div class="w-75 container mt-5 mb-5">
+                <table class="table text-center align-middle">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th v-for="header in tableHeaders" :key="header">{{ header }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(row, index) in tableData" :key="index">
+                            <td>{{ row.membership }}</td>
+                            <td>{{ row.shoppingDiscount }}</td>
+                            <td>{{ row.birthdayOffer }}</td>
+                            <td>{{ row.limitedProductPriority }}</td>
+                            <td>{{ row.price }}</td>
+                            <td><input type="radio" name="plan" :value="row.membership" v-model="selectedPlan"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="mt-4 d-flex justify-content-between align-items-center">
+                    <a href="#" class="text-primary text-decoration-none">Learn More →</a>
+                    <button class="btn btn-primary" @click="incrementCartCount" :disabled="!selectedPlan || selectedPlan === previousSelectedPlan">確定</button>
+                </div>
+            </div>
+
+            <!-- ========table======== -->
+            <!-- ========four-box======== -->
+            <div class="container my-5 four-box-container">
+                <div class="row justify-content-between">
+                    <div v-for="(card, index) in fourBoxCards" :key="index" class="card p-3" style="width: 18rem;">
+                        <img :src="card.image" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ card.title }}</h5>
+                            <p class="card-text">{{ card.price }}</p>
+                            <button type="button" class="btn btn-primary" @click="addToCart(card)"
+                                :disabled="card.addedToCart">{{ card.buttonText }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ========four-box======== -->
+            <!-- ========three-line======== -->
+            <hr class="w-75 mx-auto my-5 pb-5">
+            <div class="row mb-5 d-flex justify-content-center">
+                <div class="col-md-7 order-md-2 d-flex flex-column justify-content-center">
+                    <p class="h1">
+                        東京讀賣巨人隊 贊助選手
+                    </p>
+                    <p class="fs-3">
+                        坂本勇人
+                    </p>
+                </div>
+                <div class="col-md-2 order-md-1 ">
+                    <img class="w-100" src="./img/坂本.jpg" alt="">
+                </div>
+            </div>
+            <hr class="w-75 mx-auto my-5 pb-5">
+            <div class="row mb-5 d-flex justify-content-center">
+                <div class="col-md-7 d-flex flex-column justify-content-center">
+                    <p class="h1">
+                        北海道日本火腿鬥士隊 贊助選手
+                    </p>
+                    <p class="fs-3">
+                        伊藤大海
+                    </p>
+                </div>
+                <div class="col-md-2">
+                    <img class="w-100" src="./img/伊藤.jpg" alt="">
+                </div>
+            </div>
+            <hr class="w-75 mx-auto my-5 pb-5">
+            <div class="row mb-5 d-flex justify-content-center">
+                <div class="col-md-7 order-md-2 d-flex flex-column justify-content-center">
+                    <p class="h1">
+                        阪神虎隊 贊助選手
+                    </p>
+                    <p class="fs-3">
+                        森下翔太
+                    </p>
+                </div>
+                <div class="col-md-2 order-md-1 ">
+                    <img class="w-100" src="./img/森下.jpg" alt="">
+                </div>
+            </div>
+
+            <hr class="w-75 mx-auto my-5 pb-5">
+
+            <!-- ========three-line======== -->
+            <!-- ========400*400-box======== -->
+            <div class="row mb-5">
+                <div class="col-md-7 order-md-2 d-flex flex-column justify-content-center">
+                    <p class="h">
+                        MIZUNO TOKYO
+                    </p>
+                    <p class="fs-52">
+                        來到東京自由行，除了打卡名勝、美食購物，熱愛運動的你絕對不能錯過神田小川町的「MIZUNO TOKYO 全球旗艦店」！
+
+                        這間旗艦店由日本知名運動品牌 美津濃（MIZUNO）
+                        打造，店內商品應有盡有，無論你是棒球迷、高爾夫愛好者，還是任何運動項目的愛好者，都能找到專業又齊全的裝備！地點就在交通便利的神田小川町，鄰近秋葉原與御茶之水，安排在旅程中絕對不繞路！
+
+                        如果你熱愛運動、熱愛日本，這裡就是你不可錯過的東京景點！下次來日本，就把「MIZUNO TOKYO」排進你的行程，一起為自己的運動生活升級吧！
+                    </p>
+                </div>
+                <div class="col-md-5 order-md-1">
+                    <img class="w-100" src="./img/Mizuno Tokyo.webp" alt="">
+                </div>
+            </div>
+            <!-- ========400*400-box======== -->
+            <!-- ========八張卡片======== -->
+            <div class="container my-5 eight-cards-container">
+                <div class="row justify-content-between">
+                    <div v-for="(product, index) in eightCardsProducts.slice(0, 4)" :key="index"
+                        class="col-10 col-sm-12 col-lg-3 mx-auto mb-4">
+                        <img class="w-100" :src="product.image" alt="">
+                        <div class="card-body">
+                            <p class="card-text">{{ product.category }}</p>
+                            <h5 class="card-title">{{ product.price }}</h5>
+                            <button class="btn btn-primary" @click="addToCart(product)"
+                                :disabled="product.addedToCart">{{ product.buttonText }}</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-between">
+                    <div v-for="(product, index) in eightCardsProducts.slice(4, 8)" :key="index"
+                        class="col-10 col-sm-12 col-lg-3 mx-auto mb-4">
+                        <img class="w-100" :src="product.image" alt="">
+                        <div class="card-body">
+                            <p class="card-text">{{ product.category }}</p>
+                            <h5 class="card-title">{{ product.price }}</h5>
+                            <button class="btn btn-primary" @click="addToCart(product)"
+                                :disabled="product.addedToCart">{{ product.buttonText }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ========八張卡片======== -->
+        <!-- ========尾頁======== -->
+        <hr class="my-5 pb-5">
+        <footer class="container-fluid mt-5">
+            <div class="row justify-content-center bg-light">
+                <div class="col-12 col-xl-10 text-center text-lg-start py-5 border-top">
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5">
+                        <!-- Logo -->
+                        <div class="col col-sm-12 col-md mb-4">
+                            <a href="/"
+                                class="d-inline-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
+                                <img class="logo rounded-circle" src="./img/logo1.avif" alt="logo" height="50px">
+                                <span class="fs-5 mx-2">平安商行</span>
+                            </a>
+                        </div>
+                        <div class="col col-sm-6 mb-4">
+                            <h5>關於我們</h5>
+                            <ul class="nav flex-column text-secondary-emphasis">
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">品牌故事</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">企業精神</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">大事記</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">人才招募</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col col-sm-6 mb-4">
+                            <h5>會員制度</h5>
+                            <ul class="nav flex-column text-secondary-emphasis">
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">申請資格</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#"
+                                        class="nav-link p-0 text-body-secondary">購買須知／常見問題</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">常見Q&A</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">聯絡我們</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col col-sm-6 mb-4">
+                            <h5>客服資訊</h5>
+                            <ul class="nav flex-column text-secondary-emphasis">
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">購物說明</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">運送政策</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">退換貨政策</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">防詐騙宣導</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col col-sm-6 mb-4">
+                            <h5>企業合作</h5>
+                            <ul class="nav flex-column text-secondary-emphasis">
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">招商專區</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">媒體聯繫</a>
+                                </li>
+                                <li class="nav-item mb-2"><a href="#"
+                                        class="nav-link p-0 text-body-secondary">企業／大型採購</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row d-flex justify-content-center border-top">
+                <div class="col-11 d-flex flex-column flex-sm-row justify-content-between">
+                    <p class="mt-3">Copyright ©平安商行購物網站All Rights Reserved.Designed byCYBERBIZ.</p>
+                    <ul class="list-unstyled d-flex">
+                        <li class="ms-3 mt-3"><a class="link-body-emphasis" href="#" aria-label="Facebook">
+                                <i class="bi bi-facebook"></i></a></li>
+                        <li class="ms-3 mt-3"><a class="link-body-emphasis" href="#" aria-label="twitter">
+                                <i class="bi bi-twitter-x"></i></a></li>
+                        <li class="ms-3 mt-3"><a class="link-body-emphasis" href="#" aria-label="Instagram">
+                                <i class="bi bi-instagram"></i></a></li>
+                        <li class="ms-3 mt-3"><a class="link-body-emphasis" href="#" aria-label="LinkIn">
+                                <i class="bi bi-linkedin"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+        <!-- ========尾頁======== -->
+    </div>
+    <!-- ========script======== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp, ref, onMounted, computed } = Vue;
+
+        createApp({
+            setup() {
+                const cartCount = ref(0);
+                const cartItems = ref([]);
+                const isLoggedIn = ref(false);
+
+                // Load cart from localStorage on initialization
+                const loadCartFromLocalStorage = () => {
+                    const storedCart = localStorage.getItem('cartItems');
+                    if (storedCart) {
+                        try {
+                            const parsedCart = JSON.parse(storedCart);
+                            cartItems.value = parsedCart;
+                            cartCount.value = parsedCart.reduce((sum, item) => sum + item.quantity, 0);
+                        } catch (e) {
+                            console.error("Error parsing cart from localStorage", e);
+                            localStorage.removeItem('cartItems'); // Clear corrupted data
+                        }
+                    }
+                };
+
+                // Save cart to localStorage whenever cartItems changes
+                const saveCartToLocalStorage = () => {
+                    localStorage.setItem('cartItems', JSON.stringify(cartItems.value));
+                };
+
+                // Initial load
+                onMounted(() => {
+                    loadCartFromLocalStorage();
+                    isLoggedIn.value = localStorage.getItem('isLoggedIn') === 'true';
+                });
+
+                const selectedPlan = ref(null);
+                const previousSelectedPlan = ref(null);
+
+                const threeBoxItems = ref([
+                    { id: 'threeBox-1', image: './img/棒壘皮帶 _ 12TYBV0062.avif', alt: '球棒', title: '棒壘皮帶 _ 12TYBV0062', price: 'NT$480', buttonText: '加入購物車', addedToCart: false },
+                    { id: 'threeBox-2', image: './img/棒壘皮帶 _ 12TYBV0022.avif', alt: '打套', title: '棒壘皮帶 _ 12TYBV0022', price: 'NT$480', buttonText: '加入購物車', addedToCart: false },
+                    { id: 'threeBox-3', image: './img/棒壘皮帶 _ 12TYBV0014.avif', alt: '釘鞋', title: '棒壘皮帶 _ 12TYBV0014', price: 'NT$480', buttonText: '加入購物車', addedToCart: false }
+                ]);
+
+                const sixPictureItems = ref([
+                    './img/six-picture-3.webp',
+                    './img/six-picture-2.jpg',
+                    './img/six-picture-1.jpg',
+                    './img/six-picture-4.webp',
+                    './img/six-picture-5.webp',
+                    './img/six-picture-6.jpg'
+                ]);
+
+                const memberSection = ref({
+                    title: '會員',
+                    subtitle: '加入會員享有更多優惠'
+                });
+
+                const tableHeaders = ref([
+                    '會籍', '購物折扣', '專屬生日優惠', '限量商品優先購買', '價格/月', '勾選'
+                ]);
+
+                const tableData = ref([
+                    { membership: '銅牌', shoppingDiscount: '有', birthdayOffer: '無', limitedProductPriority: '無', price: 'NT$100' },
+                    { membership: '銀牌', shoppingDiscount: '有', birthdayOffer: '有', limitedProductPriority: '無', price: 'NT$300' },
+                    { membership: '金牌', shoppingDiscount: '有', birthdayOffer: '有', limitedProductPriority: '有', price: 'NT$500' }
+                ]);
+
+                const fourBoxCards = ref([
+                    { id: 'fourBox-1', image: './img/球棒5580.avif', title: '成人硬式木棒 _ 1CTWH25086', price: 'NT$5,580', buttonText: '加入購物車', addedToCart: false },
+                    { id: 'fourBox-2', image: './img/打套1980.avif', title: '【ARATEN 打擊手套(雙) _ 1EJEA27062', price: 'NT$1,980', buttonText: '加入購物車', addedToCart: false },
+                    { id: 'fourBox-3', image: './img/釘鞋2980.avif', title: 'LIGHTRVO BUDDY 2 棒球釘鞋 _ 11GM232600', price: 'NT$1,980', buttonText: '加入購物車', addedToCart: false },
+                    { id: 'fourBox-4', image: './img/棒球手套.avif', title: 'WILLDRIVE BLUE 棒球手套 _ 1AJGR19800', price: 'NT$4,980', buttonText: '加入購物車', addedToCart: false }
+                ]);
+
+                const eightCardsProducts = ref([
+                    { id: 'eightCards-1', image: './img/八張卡片-1.avif', category: 'CUSHIONREVO PRO MID TPU WIDE _ 11GP253064', price: 'NT$4,280', buttonText: '加入購物車', addedToCart: false },
+                    { id: 'eightCards-2', image: './img/八張卡片-2.avif', category: 'CUSHIONREVO PRO MID TPU WIDE _ 11GP253027', price: 'NT$4,280', buttonText: '加入購物車', addedToCart: false },
+                    { id: 'eightCards-3', image: './img/八張卡片-3.avif', category: 'WAVE LIGHTREVO _ 11GP252054', price: 'NT$2,180', buttonText: '加入購物車', addedToCart: false },
+                    { id: 'eightCards-4', image: './img/八張卡片-4.avif', category: 'WAVE LIGHTREVO _ 11GP252045', price: 'NT$2,180', buttonText: '加入購物車', addedToCart: false },
+                    { id: 'eightCards-5', image: './img/八張卡片-5.avif', category: 'CUSHIONREVO ELITE WIDE _ 11GM254135', price: 'NT$3,980', buttonText: '加入購物車', addedToCart: false },
+                    { id: 'eightCards-6', image: './img/八張卡片-6.avif', category: 'CUSHIONREVO ELITE WIDE _ 11GM254109', price: 'NT$3,980', buttonText: '加入購物車', addedToCart: false },
+                    { id: 'eightCards-7', image: './img/八張卡片-7.avif', category: 'CUSHIONREVO ELITE WIDE _ 11GM254014', price: 'NT$3,980', buttonText: '加入購物車', addedToCart: false },
+                    { id: 'eightCards-8', image: './img/八張卡片-8.avif', category: 'WAVE LIGHTREVO棒壘教練鞋 _ 11GT222142', price: 'NT$1,980', buttonText: '加入購物車', addedToCart: false }
+                ]);
+
+                const addedItemIds = Vue.ref(new Set());
+
+                const addToCart = (item) => {
+                    if (!addedItemIds.value.has(item.id)) {
+                        const itemToAdd = { ...item, quantity: 1 }; // Add quantity property
+                        cartItems.value.push(itemToAdd);
+                        addedItemIds.value.add(item.id);
+                        item.addedToCart = true; // Disable the button
+                        saveCartToLocalStorage();
+                        cartCount.value = cartItems.value.length; // Update cartCount based on cartItems
+                        console.log('Cart Count:', cartCount.value); // Add this line for debugging
+                    }
+                };
+
+                const incrementCartCount = () => {
+                    if (selectedPlan.value) {
+                        const selectedPlanData = tableData.value.find(plan => plan.membership === selectedPlan.value);
+                        if (selectedPlanData) {
+                            const planItem = {
+                                id: `membership-${selectedPlanData.membership}`,
+                                image: './img/logo1.avif', // Placeholder image for membership
+                                title: `會員方案: ${selectedPlanData.membership}`,
+                                price: selectedPlanData.price,
+                                addedToCart: true
+                            };
+                            // Check if this specific plan is already in the cart
+                            if (!cartItems.value.some(item => item.id === planItem.id)) {
+                                cartItems.value.push(planItem);
+                                saveCartToLocalStorage();
+                                cartCount.value = cartItems.value.length;
+                                console.log('Cart Count (from 確定 button):', cartCount.value);
+                            } else {
+                                console.log('Membership plan already in cart.');
+                            }
+                        }
+                    }
+                    previousSelectedPlan.value = selectedPlan.value;
+                };
+
+                const logout = () => {
+                    localStorage.removeItem('isLoggedIn');
+                    isLoggedIn.value = false;
+                    window.location.href = './登入頁面.html';
+                };
+
+                return {
+                    threeBoxItems,
+                    sixPictureItems,
+                    memberSection,
+                    tableHeaders,
+                    tableData,
+                    fourBoxCards,
+                    eightCardsProducts,
+                    cartCount,
+                    addToCart,
+                    incrementCartCount,
+                    selectedPlan,
+                    previousSelectedPlan,
+                    addedItemIds,
+                    isLoggedIn,
+                    logout
+                };
+            }
+        }).mount('#app');
+    </script>
+
+    <!-- ========script======== -->
+</body>
+
+</html>

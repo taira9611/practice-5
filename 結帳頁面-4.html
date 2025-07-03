@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>購物車</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <style>
+        .my-bg-gray {
+            background-color: lightgray;
+            /* width: 100%; */
+            /* height: 100px; */
+        }
+
+        .navbar-large .navbar-brand,
+        .navbar-large .nav-link,
+        .navbar-large .dropdown-item {
+            padding-top: 1.5rem !important;
+            /* 增加垂直內邊距 */
+            padding-bottom: 1.5rem !important;
+            /* 增加垂直內邊距 */
+            font-size: 2.1rem;
+            /* 增加字體大小 */
+            font-weight: bold;
+            ;
+        }
+
+        .navbar-large .navbar-brand img {
+            height: 100px;
+            /* 調整 Logo 大小 */
+        }
+
+        .navbar-large .nav-link {
+            /* ... 其他樣式 ... */
+            font-size: 2.1rem;
+            /* 這是導航連結的字體大小 */
+            /* ... 其他樣式 ... */
+
+        }
+
+        .navbar-large .nav-item .btn {
+            /* 調整按鈕的垂直對齊，使其與文字連結對齊 */
+            padding-top: 1.5rem !important;
+            /* 確保與 nav-link 的上邊距一致 */
+            padding-bottom: 1.5rem !important;
+            /* 確保與 nav-link 的下邊距一致 */
+            margin-top: 0 !important;
+            /* 移除可能的上邊距 */
+            margin-bottom: 0 !important;
+            /* 移除可能的下邊距 */
+            display: flex;
+            /* 使用 flexbox 讓內容垂直居中 */
+            align-items: center;
+            /* 垂直居中對齊 */
+            height: 100%;
+            /* 讓按鈕高度填滿 nav-item */
+        }
+
+        .navbar-large .nav-item .btn .bi-cart {
+            /* 由於按鈕已經設定了 padding，這裡只需要確保圖示本身正確顯示 */
+            line-height: 1;
+            /* 重置行高，避免額外空間 */
+        }
+
+        .cart-badge {
+            position: static;
+            /* 或不設定，讓它跟隨 flow */
+            margin-left: 5px;
+            /* 在圖示和數字之間添加一些間距 */
+            top: -5px;
+            /* Adjust to move slightly above the icon */
+            right: -5px;
+            /* Adjust to move slightly to the right of the icon */
+            font-size: 0.7em;
+            /* Smaller font for a compact look */
+            padding: .2em .5em;
+            /* Smaller padding to make it a tighter circle */
+            border-radius: 50%;
+            /* Ensure it's a perfect circle */
+            background-color: red;
+            color: white;
+            z-index: 1000;
+            min-width: 1.5em;
+            /* Ensure minimum width for single digit */
+            text-align: center;
+            /* Center the number */
+            line-height: 1.5em;
+            /* Center vertically */
+        }
+
+        .step-circle-wh {
+            width: 50px;
+            height: 50px;
+        }
+
+        .my-progress {
+            /* background-color: pink; */
+            width: calc(100% - 25px * 2 - 4px * 2);
+            /* width: 100%; */
+            height: 10px;
+            left: 100%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .item-qty {
+            width: 50px;
+            height: 50px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        ul {
+            list-style: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- ========nav======== -->
+        <nav class="navbar navbar-expand-lg bg-light navbar-large">
+            <div class="container">
+                <a class="navbar-brand" href="./index.html">
+                    <img src="./img/logo1.avif" alt="Bootstrap">
+                    <!-- Navbar -->
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item ">
+                            <a class="nav-link active" aria-current="page" href="./index.html">首頁</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">最新消息</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">銷售據點</a>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn" data-bs-toggle="modal" data-bs-target="#checkoutModal">
+                                <a href="./結帳頁面-1.html"
+                                    class="bi bi-cart text-decoration-none text-reset position-relative"
+                                    style="font-size: 2.1rem;">
+                                    <span class="cart-badge" v-show="cartCount > 0">{{ cartCount }}</span>
+                                </a>
+                            </button>
+                        </li>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <i class="bi bi-person-circle"></i>
+                            </a>
+                            <ul class="dropdown-menu" style="left:-130px">
+                                <li><a class="dropdown-item" href="./登入頁面.html">會員登入</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid bg-danger text-white text-center py-5 fs-1">
+            注意!本網站為學習練習用，非美津濃官網
+        </div>
+        <!-- ========nav======== -->
+        <!-- ========進度條======== -->
+        <div class="container-fluid">
+            <div class="row d-flex my-5 justify-content-center">
+                <div class="col-xl-10 bg-light p-5 rounded-1 shadow ">
+                    <p class="fs-1 mb-5">購物車</p>
+                    <div class="row text-center">
+                        <div class="col-3 px-0">
+                            <div class="position-relative">
+                                <div
+                                    class="step-circle-wh mx-auto rounded-circle bg-success text-white d-flex justify-content-center align-items-center">
+                                    1
+                                    <div class="progress my-progress position-absolute">
+                                        <div class="progress-bar" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="lead">確認購物車</div>
+                        </div>
+                        <div class="col-3 px-0">
+                            <div class="position-relative">
+                                <div
+                                    class="step-circle-wh mx-auto rounded-circle bg-success text-white d-flex justify-content-center align-items-center">
+                                    2
+                                    <div class="progress my-progress position-absolute">
+                                        <div class="progress-bar" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="lead">付款與運送方式</div>
+                        </div>
+                        <div class="col-3 px-0">
+                            <div class="position-relative">
+                                <div
+                                    class="step-circle-wh mx-auto rounded-circle bg-success text-white d-flex justify-content-center align-items-center">
+                                    3
+                                    <div class="progress my-progress position-absolute">
+                                        <div class="progress-bar" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="lead">填寫資料</div>
+                        </div>
+                        <div class="col-3 px-0">
+                            <div class="position-relative">
+                                <div
+                                    class="step-circle-wh mx-auto rounded-circle bg-success text-white d-flex justify-content-center align-items-center">
+                                    4
+                                </div>
+                            </div>
+                            <div class="lead">完成訂購</div>
+                        </div>
+                    </div>
+                    <!-- ========進度條======== -->
+                    <!-- ========訂單內容======== -->
+                    <div class="container py-1">
+                        <hr class="py-3">
+                        <div class="row">
+                            <p class="h3 pb-2 fw-medium">訂單明細</p>
+                        </div>
+                        <div v-for="(item, index) in cartItems" :key="index"
+                            class="row align-items-center py-3 border-bottom">
+                            <div class="col-md-6 d-flex align-items-center">
+                                <img :src="item.image" class="img-fluid me-3" style="max-width: 80px;"
+                                    :alt="item.title">
+                                <div>
+                                    <p class="h5 mb-1">{{ item.title }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex justify-content-end align-items-center flex-wrap">
+                                <div class="h5 mb-0 px-3">x{{ item.quantity }}</div>
+                                <div class="h5 mb-0 px-3">{{ calculateItemPrice(item) }}</div>
+                            </div>
+                        </div>
+
+                        <div class="row pt-5 ">
+                            <p class="h3  fw-medium">付款方式
+                            <div class="row pt-4  h5">
+                                <div class="col-1 fw-medium">方式</div>
+                                <div class="col-10" id="paymentMethodDisplay"></div>
+                            </div>
+                            </p>
+                            <p class="h3  fw-medium">運送方式
+                            <div class="row pt-4  h5">
+                                <div class="col-1 fw-medium">方式</div>
+                                <div class="col-10" id="shippingMethodDisplay"></div>
+                            </div>
+                            </p>
+                            <p class="h3  fw-medium">購買人資料
+                            <div class="row pt-4  h5">
+                                <div class=" col-1 fw-medium">姓名</div>
+                                <div class="col-10" id="recipientName"></div>
+                            </div>
+                            <div class="row pt-4  h5">
+                                <div class="col-1 fw-medium">電話</div>
+                                <div class="col-10" id="recipientPhone"></div>
+                            </div>
+                            <div class="row pt-4  h5">
+                                <div class="col-1 fw-medium">Email</div>
+                                <div class="col-10" id="recipientEmail"></div>
+                            </div>
+                            <div class="row pt-4 h5">
+                                <div class="col-1 fw-medium">地址</div>
+                                <div class="col-10" id="recipientAddress"></div>
+                            </div>
+                            </p>
+                        </div>
+
+                        <div class="row py-3 d-flex justify-content-end border-top">
+                            <div class="col-4"></div>
+                            <div class="col text-end">
+                                <div class="row-3">
+                                    <p class="h5 text-black-50">數量：</p>
+                                </div>
+                                <div class="row-3">
+                                    <p class="h5 text-black-50">小計：</p>
+                                </div>
+                                <div class="row-3">
+                                    <p class="h5 text-black-50">運費：</p>
+                                </div>
+                                <div class="row-3">
+                                    <p class="h5 text-black-50">總計：</p>
+                                </div>
+                            </div>
+                            <div class="col text-end">
+                                <div class="row-3 ">
+                                    <p class="h5">{{ totalQuantity }}</p>
+                                </div>
+                                <div class="row-3 ">
+                                    <p class="h5">{{ formattedTotalPrice }}</p>
+                                </div>
+                                <div class="row-3 ">
+                                    <p class="h5">$60元</p>
+                                </div>
+                                <div class="row-3 ">
+                                    <p class="h5">{{ finalPrice }}</p>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row total my-3 d-flex justify-content-between">
+                            <div class="col-auto">
+                                <a href="./結帳頁面-3.html" class="btn btn-primary px-3 py-1">上一步</a>
+                            </div>
+                            <div class="col-auto d-flex  justify-content-end">
+                                <button type="button" class="btn btn-primary px-3 py-1"
+                                    @click="finalizeOrder">完成並送出</button>
+                            </div>
+
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- ========訂單內容======== -->
+            <!-- ========尾頁======== -->
+            <footer class="container-fluid mt-5">
+                <div class="row justify-content-center bg-light">
+                    <div class="col-12 col-xl-10 text-center text-lg-start py-5 border-top">
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5">
+                            <!-- Logo -->
+                            <div class="col col-sm-12 col-md mb-4">
+                                <a href="/"
+                                    class="d-inline-flex align-items-center mb-3 link-body-emphasis text-decoration-none">
+                                    <img class="logo rounded-circle" src="./img/logo1.avif" alt="logo" height="50px">
+                                    <span class="fs-5 mx-2">平安商行</span>
+                                </a>
+                            </div>
+                            <div class="col col-sm-6 mb-4">
+                                <h5>關於我們</h5>
+                                <ul class="nav flex-column text-secondary-emphasis">
+                                    <li class="nav-item mb-2"><a href="#"
+                                            class="nav-link p-0 text-body-secondary">品牌故事</a>
+                                    </li>
+                                    <li class="nav-item mb-2"><a href="#"
+                                            class="nav-link p-0 text-body-secondary">企業精神</a>
+                                    </li>
+                                    <li class="nav-item mb-2"><a href="#"
+                                            class="nav-link p-0 text-body-secondary">大事記</a>
+                                    </li>
+                                    <li class="nav-item mb-2"><a href="#"
+                                            class="nav-link p-0 text-body-secondary">人才招募</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col col-sm-6 mb-4">
+                                <h5>會員制度</h5>
+                                <ul class="nav flex-column text-secondary-emphasis">
+                                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">申請資格
+                                    </li>
+                                    <li class="nav-item mb-2"><a href="#"
+                                            class="nav-link p-0 text-body-secondary">購買須知／常見問題</a>
+                                    </li>
+                                    <li class="nav-item mb-2"><a href="#"
+                                            class="nav-link p-0 text-body-secondary">常見Q&A</a>
+                                    </li>
+                                    <li class="nav-item mb-2"><a href="#"
+                                            class="nav-link p-0 text-body-secondary">聯絡我們</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col col-sm-6 mb-4">
+                                <h5>客服資訊</h5>
+                                <ul class="nav flex-column text-secondary-emphasis">
+                                    <li class="nav-item mb-2"><a href="#"
+                                            class="nav-link p-0 text-body-secondary">購物說明</a>
+                                    </li>
+                                    <li class="nav-item mb-2"><a href="#"
+                                            class="nav-link p-0 text-body-secondary">運送政策</a>
+                                    </li>
+                                    <li class="nav-item mb-2"><a href="#"
+                                            class="nav-link p-0 text-body-secondary">退換貨政策</a>
+                                    </li>
+                                    <li class="nav-item mb-2"><a href="#"
+                                            class="nav-link p-0 text-body-secondary">防詐騙宣導</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col col-sm-6 mb-4">
+                                <h5>企業合作</h5>
+                                <ul class="nav flex-column text-secondary-emphasis">
+                                    <li class="nav-item mb-2"><a href="#"
+                                            class="nav-link p-0 text-body-secondary">招商專區</a>
+                                    </li>
+                                    <li class="nav-item mb-2"><a href="#"
+                                            class="nav-link p-0 text-body-secondary">媒體聯繫</a>
+                                    </li>
+                                    <li class="nav-item mb-2"><a href="#"
+                                            class="nav-link p-0 text-body-secondary">企業／大型採購</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row d-flex justify-content-center border-top">
+                    <div class="col-11 d-flex flex-column flex-sm-row justify-content-between">
+                        <p class="mt-3">Copyright ©平安商行官方購物網站All Rights Reserved.Designed byCYBERBIZ.</p>
+                        <ul class="list-unstyled d-flex">
+                            <li class="ms-3 mt-3"><a class="link-body-emphasis" href="#" aria-label="Facebook">
+                                    <i class="bi bi-facebook"></i></a></li>
+                            <li class="ms-3 mt-3"><a class="link-body-emphasis" href="#" aria-label="twitter">
+                                    <i class="bi bi-twitter-x"></i></a></li>
+                            <li class="ms-3 mt-3"><a class="link-body-emphasis" href="#" aria-label="Instagram">
+                                    <i class="bi bi-instagram"></i></a></li>
+                            <li class="ms-3 mt-3"><a class="link-body-emphasis" href="#" aria-label="LinkIn">
+                                    <i class="bi bi-linkedin"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </footer>
+            <!-- ========尾頁======== -->
+
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+            crossorigin="anonymous"></script>
+        <script>
+            const { createApp, ref, onMounted, computed } = Vue;
+
+            createApp({
+                setup() {
+                    const cartCount = computed(() => {
+                        return cartItems.value.reduce((total, item) => total + item.quantity, 0);
+                    });
+                    const cartItems = ref([]);
+                    const shippingCost = 60;
+
+                    onMounted(() => {
+                        const storedCart = localStorage.getItem('cartItems');
+                        if (storedCart) {
+                            try {
+                                cartItems.value = JSON.parse(storedCart);
+
+                            } catch (e) {
+                                console.error("Error parsing cart from localStorage", e);
+                            }
+                        }
+
+                        const selectedPaymentMethod = localStorage.getItem('selectedPaymentMethod');
+                        if (selectedPaymentMethod) {
+                            document.getElementById('paymentMethodDisplay').innerText = selectedPaymentMethod;
+                        }
+
+                        const selectedShippingMethod = localStorage.getItem('selectedShippingMethod');
+                        if (selectedShippingMethod) {
+                            document.getElementById('shippingMethodDisplay').innerText = selectedShippingMethod;
+                        }
+
+                        const recipientData = localStorage.getItem('recipientData');
+                        if (recipientData) {
+                            try {
+                                const parsedRecipientData = JSON.parse(recipientData);
+                                document.getElementById('recipientName').innerText = parsedRecipientData.name;
+                                document.getElementById('recipientPhone').innerText = parsedRecipientData.phone;
+                                document.getElementById('recipientEmail').innerText = parsedRecipientData.email;
+                                document.getElementById('recipientAddress').innerText = `${parsedRecipientData.zip} ${parsedRecipientData.city}${parsedRecipientData.address}`;
+                            } catch (e) {
+                                console.error("Error parsing recipient data from localStorage", e);
+                            }
+                        }
+                    });
+
+                    const calculateItemPrice = (item) => {
+                        const priceMatch = item.price.match(/NT\$(\d+,?\d*)/);
+                        if (priceMatch) {
+                            const price = parseFloat(priceMatch[1].replace(/,/g, ''));
+                            return `NT${(price * item.quantity).toLocaleString()}`;
+                        }
+                        return item.price; // Return original if parsing fails
+                    };
+
+                    const totalQuantity = computed(() => {
+                        let totalQty = 0;
+                        cartItems.value.forEach(item => {
+                            if (item.id.startsWith('membership-')) {
+                                totalQty += 1; // 會員商品算作1件
+                            } else {
+                                totalQty += item.quantity;
+                            }
+                        });
+                        return totalQty;
+                    });
+
+                    const totalPrice = computed(() => {
+                        let total = 0;
+                        cartItems.value.forEach(item => {
+                            const priceMatch = item.price.match(/NT\$(\d+,?\d*)/);
+                            if (priceMatch) {
+                                const price = parseFloat(priceMatch[1].replace(/,/g, ''));
+                                if (item.id.startsWith('membership-')) {
+                                    total += price * 1; // 會員商品價格按1件計算
+                                } else {
+                                    total += price * item.quantity;
+                                }
+                            }
+                        });
+                        return total;
+                    });
+
+                    const formattedTotalPrice = computed(() => {
+                        return `NT${totalPrice.value.toLocaleString()}`;
+                    });
+
+                    const finalPrice = computed(() => {
+                        if (totalQuantity.value > 0) {
+                            return `NT${(totalPrice.value + shippingCost).toLocaleString()}`;
+                        }
+                        return 'NT$0';
+                    });
+
+                    const finalizeOrder = () => {
+                        alert('訂單成立');
+                        localStorage.removeItem('cartItems');
+                        window.location.href = './index.html';
+                    };
+
+                    return {
+                        cartCount,
+                        cartItems,
+                        calculateItemPrice,
+                        totalQuantity,
+                        totalPrice,
+                        formattedTotalPrice,
+                        finalPrice,
+                        finalizeOrder
+                    };
+                }
+            }).mount('#app');
+        </script>
+</body>
+
+</html>
